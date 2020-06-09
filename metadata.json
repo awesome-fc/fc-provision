@@ -1,0 +1,5 @@
+{
+    "name": "fc-provision",
+    "description": "provision example of function compute",
+    "copyOnlyPaths": [ ".fun", "node_modules"]
+}

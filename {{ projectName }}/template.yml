@@ -1,0 +1,48 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  provision-svr:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: 'helloworld'
+    provision-fun:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: nodejs10
+        CodeUri: './'
+  version1:
+    Type: "ALIYUN::FC::Version"
+    Properties:
+      ServiceName: 
+        Fn::GetAtt:
+          - provision-svr
+          - ServiceName
+  alias1:
+    Type: "ALIYUN::FC::Alias"
+    Properties:
+      VersionId: 
+        Fn::GetAtt:
+          - version1
+          - VersionId
+      ServiceName: 
+        Fn::GetAtt:
+          - provision-svr
+          - ServiceName
+      AliasName: prod
+  provision1:
+    Type: "ALIYUN::FC::ProvisionConfig"
+    Properties:
+      ServiceName: 
+        Fn::GetAtt:
+          - provision-svr
+          - ServiceName
+      FunctionName:
+        Fn::GetAtt:
+          - provision-svrprovision-fun
+          - FunctionName
+      Target: 1
+      Qualifier:
+        Fn::GetAtt:
+          - alias1
+          - AliasName
